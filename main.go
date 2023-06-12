@@ -12,6 +12,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := chi.NewRouter()
 	r.Get("/home", homeHandler)
+
 	r.NotFoundHandler()
 	http.ListenAndServe(":3000", r)
 }
