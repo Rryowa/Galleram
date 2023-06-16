@@ -1,34 +1,33 @@
 package main
 
 import (
+	"galleryChi/views"
 	"github.com/go-chi/chi/v5"
-	"html/template"
+	"log"
 	"net/http"
-	"path/filepath"
 )
 
-func homeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello"))
-	tplPath := filepath.Join("templates", "home.gohtml")
-	tpl, err := template.ParseFiles(tplPath)
+func executeTemplate(w http.ResponseWriter, filename string) {
+	t, err := views.ParseTemplate(filename)
 	if err != nil {
-		http.Error(w, "wrong template path", http.
-			StatusInternalServerError)
+		log.Printf("parsing template: %v", err)
+		http.Error(w, "There was an error parsing", http.StatusInternalServerError)
 		return
 	}
-	err = tpl.Execute(w, nil)
-	if err != nil {
-		http.Error(w, "passed wrong data", http.
-			StatusInternalServerError)
-		return
-	}
+	t.Execute(w, nil)
+}
 
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	executeTemplate(w, "home.gohtml")
+}
+func contactHandler(w http.ResponseWriter, r *http.Request) {
+	executeTemplate(w, "contact.gohtml")
 }
 
 func main() {
 	r := chi.NewRouter()
 	r.Get("/home", homeHandler)
-
+	r.Get("/contact", contactHandler)
 	r.NotFoundHandler()
 	http.ListenAndServe(":3000", r)
 }
