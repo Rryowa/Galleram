@@ -1,19 +1,23 @@
 package main
 
 import (
+	"galleryChi/templates"
 	"galleryChi/views"
 	"github.com/go-chi/chi/v5"
-	"log"
+	"github.com/go-chi/chi/v5/middleware"
 	"net/http"
 )
 
 func executeTemplate(w http.ResponseWriter, filename string) {
-	t, err := views.ParseTemplate(filename)
-	if err != nil {
-		log.Printf("parsing template: %v", err)
-		http.Error(w, "There was an error parsing", http.StatusInternalServerError)
-		return
-	}
+	t := views.Must(views.ParseFS(templates.FS, filename))
+	//	Must -> if err != nil {panic}
+	//if err != nil {
+	//	//log error in terminal
+	//	//log.Printf("parsing template: %v", err) (we dont need this if we use chi.Recoverer)
+	//	//tell the server about error (we dont need this if we use chi.Recoverer)
+	//	//http.Error(w, "There was an error parsing template", http.StatusInternalServerError)
+	//	panic(err)
+	//}
 	t.Execute(w, nil)
 }
 
@@ -26,6 +30,9 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	//Recoverer recover from panic, sends error 500 and prints traced log in terminal
+	r.Use(middleware.Recoverer)
 	r.Get("/home", homeHandler)
 	r.Get("/contact", contactHandler)
 	r.NotFoundHandler()
