@@ -33,7 +33,7 @@ func main() {
 	r.Use(middleware.Logger)
 	//Recoverer recover from panic, sends error 500 and prints traced log in terminal
 	r.Use(middleware.Recoverer)
-	r.Get("/home", homeHandler)
+	r.Get("/", homeHandler)
 	r.Get("/contact", contactHandler)
 	r.NotFoundHandler()
 	http.ListenAndServe(":3000", r)
