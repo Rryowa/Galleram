@@ -9,7 +9,7 @@ import (
 )
 
 func executeTemplate(w http.ResponseWriter, filename string) {
-	t := views.Must(views.ParseFS(templates.FS, filename))
+	t := views.Must(views.ParseFS(templates.FS, filename, "tailwind.gohtml"))
 	//	Must -> if err != nil {panic}
 	//if err != nil {
 	//	//log error in terminal
