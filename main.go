@@ -14,15 +14,23 @@ func main() {
 	r.Use(middleware.Logger)
 	//Recoverer recover from panic, sends error 500 and prints traced log in terminal
 	r.Use(middleware.Recoverer)
-	//r.Get("/", homeHandler)
-	//r.Get("/contact", contactHandler)
-	usersC := controllers.Users{}
-	usersC.Templates.New = views.Must(views.ParseFS(
+	r.Get("/", controllers.StaticTemplate(views.Must(views.ParseFS(
 		templates.FS,
-		"signup.gohtml",
-		"tailwind.gohtml",
+		"home.gohtml", "tailwind.gohtml",
+	))))
+	r.Get("/contact", controllers.StaticTemplate(views.Must(views.ParseFS(
+		templates.FS,
+		"contact.gohtml", "tailwind.gohtml",
+	))))
+
+	usersController := controllers.User{}
+	usersController.Templates.Tpl = views.Must(views.ParseFS(
+		templates.FS,
+		"signup.gohtml", "tailwind.gohtml",
 	))
-	r.Get("/signup", usersC.New)
+	r.Get("/users/new", usersController.New)
+	r.Post("/users", usersController.Create)
+	//submit form
 	r.NotFoundHandler()
 	http.ListenAndServe(":3000", r)
 }

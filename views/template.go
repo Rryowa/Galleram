@@ -15,10 +15,11 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	t, err := template.ParseFS(fs, patterns...)
 	if err != nil {
 		return Template{}, fmt.Errorf("ParseFS %w", err)
+	} else {
+		return Template{
+			htmlTpl: t,
+		}, nil
 	}
-	return Template{
-		htmlTpl: t,
-	}, nil
 }
 
 func (t Template) Execute(w http.ResponseWriter, data any) {
