@@ -11,15 +11,14 @@ type Template struct {
 	htmlTpl *template.Template
 }
 
-func ParseFS(fs fs.FS, patterns ...string) (*Template, error) {
+func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	t, err := template.ParseFS(fs, patterns...)
 	if err != nil {
-		return &Template{}, fmt.Errorf("ParseFS %w", err)
-	} else {
-		return &Template{
-			htmlTpl: t,
-		}, nil
+		return Template{}, fmt.Errorf("ParseFS %w", err)
 	}
+	return Template{
+		htmlTpl: t,
+	}, nil
 }
 
 func (t Template) Execute(w http.ResponseWriter, data any) {
@@ -31,7 +30,7 @@ func (t Template) Execute(w http.ResponseWriter, data any) {
 	}
 }
 
-func Must(t *Template, err error) *Template {
+func Must(t Template, err error) Template {
 	if err != nil {
 		panic(err)
 	}
