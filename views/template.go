@@ -5,7 +5,6 @@ import (
 	"html/template"
 	"io/fs"
 	"net/http"
-	"path/filepath"
 )
 
 type Template struct {
@@ -19,18 +18,6 @@ func ParseFS(fs fs.FS, patterns ...string) (*Template, error) {
 	} else {
 		return &Template{
 			htmlTpl: t,
-		}, nil
-	}
-}
-
-func ParseTemplate(filename string) (*Template, error) {
-	tplPath := filepath.Join("templates", filename)
-	tpl, err := template.ParseFiles(tplPath)
-	if err != nil {
-		return &Template{}, fmt.Errorf("%w", err)
-	} else {
-		return &Template{
-			htmlTpl: tpl,
 		}, nil
 	}
 }

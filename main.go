@@ -27,6 +27,9 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 func contactHandler(w http.ResponseWriter, r *http.Request) {
 	executeTemplate(w, "contact.gohtml")
 }
+func signupHandler(w http.ResponseWriter, r *http.Request) {
+	executeTemplate(w, "signup.gohtml")
+}
 
 func main() {
 	r := chi.NewRouter()
@@ -35,6 +38,7 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Get("/", homeHandler)
 	r.Get("/contact", contactHandler)
+	r.Get("/signup", signupHandler)
 	r.NotFoundHandler()
 	http.ListenAndServe(":3000", r)
 }
