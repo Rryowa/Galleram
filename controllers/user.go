@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"galleryChi/models"
 	"net/http"
 )
 
@@ -11,6 +12,7 @@ type User struct {
 	Templates struct {
 		Tpl Template
 	}
+	UserService *models.UserService
 }
 
 func (u User) New(w http.ResponseWriter, r *http.Request) {
@@ -22,6 +24,14 @@ func (u User) New(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u User) Create(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Email: ", r.PostFormValue("email"))
-	fmt.Fprintln(w, "Pass: ", r.PostFormValue("password"))
+	email := r.PostFormValue("email")
+	password := r.PostFormValue("password")
+
+	//TODO: HOW TO PASS A STRUCT HERE?
+	user, err := u.UserService.Create(email, password)
+	if err != nil {
+		fmt.Println()
+		http.Error(w, "Went wrong while creating", http.StatusInternalServerError)
+	}
+	fmt.Fprintf(w, "User created: %+v", user)
 }

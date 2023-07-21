@@ -1,8 +1,10 @@
 version: "3.9"
 
-# If you typed wrong password in adminer,
-# "docker compose down" and then "docker compose up"
+#If you typed wrong password in adminer,
+#"docker compose down" and then "docker compose up"
 
+#! docker compose exec -i -t db psql -U postgres -d gallery
+#string value in postgres - first_name text;
 services:
   #database
   #Name of the service
@@ -16,8 +18,9 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: gallery
     ports:
-    # port 5432 on pc maps to 5432 on docker vm
-      - "5432:5432"
+    #port 3030 on pc maps to 5432 on docker vm
+    #so in Conn string host=localhost port=3030... will connect to docker postgres
+      - "3030:5432"
 
   #Adminer provides web UI to connect to db
   adminer:
@@ -26,5 +29,7 @@ services:
     environment:
       ADMINER_DESIGN: dracula
     ports:
-    #localhost:3333 gonna map server to tun on adminer service
+    #localhost:3333 gonna map server to adminer service
+    #so localhost:8080 from main.go will route to our site, while
+    #localhost:3333 in browser will route to adminer page
       - "3333:8080"

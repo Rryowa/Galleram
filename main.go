@@ -2,6 +2,7 @@ package main
 
 import (
 	"galleryChi/controllers"
+	"galleryChi/models"
 	"galleryChi/templates"
 	"galleryChi/views"
 	"github.com/go-chi/chi/v5"
@@ -16,14 +17,21 @@ func main() {
 	r.Use(middleware.Recoverer)
 	r.Get("/", controllers.StaticTemplate(views.Must(views.ParseFS(
 		templates.FS,
-		"home.gohtml", "tailwind.gohtml",
-	))))
+		"home.gohtml", "tailwind.gohtml"))))
 	r.Get("/contact", controllers.StaticTemplate(views.Must(views.ParseFS(
 		templates.FS,
-		"contact.gohtml", "tailwind.gohtml",
-	))))
+		"contact.gohtml", "tailwind.gohtml"))))
 
-	usersController := controllers.User{}
+	db, err := models.Open(models.DefaultPostgresConfig())
+	if err != nil {
+		panic(err)
+	}
+	userService := models.UserService{
+		DB: db,
+	}
+	usersController := controllers.User{
+		UserService: &userService,
+	}
 	usersController.Templates.Tpl = views.Must(views.ParseFS(
 		templates.FS,
 		"signup.gohtml", "tailwind.gohtml",
