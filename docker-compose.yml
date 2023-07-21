@@ -1,0 +1,30 @@
+version: "3.9"
+
+# If you typed wrong password in adminer,
+# "docker compose down" and then "docker compose up"
+
+services:
+  #database
+  #Name of the service
+  db:
+    image: postgres
+    restart: always
+    #Env variables
+    #these vars should be at start up to create user
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: gallery
+    ports:
+    # port 5432 on pc maps to 5432 on docker vm
+      - "5432:5432"
+
+  #Adminer provides web UI to connect to db
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DESIGN: dracula
+    ports:
+    #localhost:3333 gonna map server to tun on adminer service
+      - "3333:8080"
