@@ -23,7 +23,6 @@ type NewUser struct {
 }
 
 func (us *UserService) Create(nu *NewUser) (*User, error) {
-	email := strings.ToLower(nu.Email)
 	hashBytes, err := bcrypt.GenerateFromPassword([]byte(nu.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, fmt.Errorf("create user: %w", err)
@@ -32,13 +31,15 @@ func (us *UserService) Create(nu *NewUser) (*User, error) {
 
 	//user to return
 	user := User{
-		Email:        email,
+		Email:        strings.ToLower(nu.Email),
 		PasswordHash: passwordHash,
 	}
 	row := us.DB.QueryRow(`
-		INSERT INTO users (email, passwordHash)
-		VALUES ($1, $2) RETURNING id`, email, passwordHash)
+		INSERT INTO users (email, password_hash) 
+		VALUES ($1, $2) RETURNING id`, user.Email, user.PasswordHash)
 	err = row.Scan(&user.ID)
-
+	if err != nil {
+		return nil, fmt.Errorf("insert user: %w", err)
+	}
 	return &user, nil
 }

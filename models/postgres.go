@@ -11,6 +11,15 @@ func Open(cfg PostgresConfig) (*sql.DB, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open: %w", err)
 	}
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS users (
+			id SERIAL PRIMARY KEY,
+			email TEXT NOT NULL,
+			password_hash TEXT NOT NULL)
+		`)
+	if err != nil {
+		panic(err)
+	}
 	return db, nil
 }
 
@@ -24,17 +33,17 @@ type PostgresConfig struct {
 }
 
 func (cfg PostgresConfig) String() string {
-	return fmt.Sprintf("host=%s port=%s usser=%s password=%s dbname=%s "+
+	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s "+
 		"sslmode=%s", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database, cfg.SSLMode)
 }
 
 func DefaultPostgresConfig() PostgresConfig {
 	return PostgresConfig{
-		"localhost",
-		"5432",
-		"postgres",
-		"root",
-		"gallery",
-		"disable",
+		Host:     "localhost",
+		Port:     "5432",
+		User:     "root",
+		Password: "root",
+		Database: "gallery",
+		SSLMode:  "disable",
 	}
 }

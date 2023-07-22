@@ -22,7 +22,8 @@ func main() {
 		templates.FS,
 		"contact.gohtml", "tailwind.gohtml"))))
 
-	db, err := models.Open(models.DefaultPostgresConfig())
+	cfg := models.DefaultPostgresConfig()
+	db, err := models.Open(cfg)
 	if err != nil {
 		panic(err)
 	}
@@ -37,7 +38,7 @@ func main() {
 		"signup.gohtml", "tailwind.gohtml",
 	))
 	r.Get("/users/new", usersController.New)
-	r.Post("/users", usersController.Create)
+	r.Post("/users", usersController.CreateUser)
 	//submit form
 	r.NotFoundHandler()
 	http.ListenAndServe("localhost:8080", r)

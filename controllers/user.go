@@ -23,14 +23,14 @@ func (u User) New(w http.ResponseWriter, r *http.Request) {
 	u.Templates.Tpl.Execute(w, data)
 }
 
-func (u User) Create(w http.ResponseWriter, r *http.Request) {
-	email := r.PostFormValue("email")
-	password := r.PostFormValue("password")
-
-	//TODO: HOW TO PASS A STRUCT HERE?
-	user, err := u.UserService.Create(email, password)
+func (u User) CreateUser(w http.ResponseWriter, r *http.Request) {
+	user, err := u.UserService.Create(
+		&models.NewUser{
+			Email:    r.PostFormValue("email"),
+			Password: r.PostFormValue("email"),
+		})
 	if err != nil {
-		fmt.Println()
+		fmt.Println(err)
 		http.Error(w, "Went wrong while creating", http.StatusInternalServerError)
 	}
 	fmt.Fprintf(w, "User created: %+v", user)
