@@ -22,23 +22,22 @@ func main() {
 		templates.FS,
 		"contact.gohtml", "tailwind.gohtml"))))
 
-	cfg := models.DefaultPostgresConfig()
-	db, err := models.Open(cfg)
+	db, err := models.Open(models.DefaultPostgresConfig())
 	if err != nil {
 		panic(err)
 	}
-	userService := models.UserService{
-		DB: db,
+
+	usersController := controllers.Users{
+		UpTpl: views.Must(views.ParseFS(
+			templates.FS, "signup.gohtml", "tailwind.gohtml")),
+		InTpl: views.Must(views.ParseFS(
+			templates.FS, "signin.gohtml", "tailwind.gohtml")),
+		UserService: &models.UserService{DB: db},
 	}
-	usersController := controllers.User{
-		UserService: &userService,
-	}
-	usersController.Templates.Tpl = views.Must(views.ParseFS(
-		templates.FS,
-		"signup.gohtml", "tailwind.gohtml",
-	))
-	r.Get("/users/new", usersController.New)
-	r.Post("/users", usersController.CreateUser)
+	r.Get("/sign-up", usersController.SignUp)
+	r.Post("/users/new", usersController.CreateUser)
+	r.Get("/sign-in", usersController.SignIn)
+	r.Post("/users/old", usersController.AuthUser)
 	//submit form
 	r.NotFoundHandler()
 	http.ListenAndServe("localhost:8080", r)

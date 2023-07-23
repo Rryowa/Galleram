@@ -39,7 +39,29 @@ func (us *UserService) Create(nu *NewUser) (*User, error) {
 		VALUES ($1, $2) RETURNING id`, user.Email, user.PasswordHash)
 	err = row.Scan(&user.ID)
 	if err != nil {
-		return nil, fmt.Errorf("insert user: %w", err)
+		return nil, fmt.Errorf("insert users: %w", err)
+	}
+	return &user, nil
+}
+
+func (us *UserService) Auth(nu *NewUser) (*User, error) {
+	//user to find
+	user := User{
+		Email: strings.ToLower(nu.Email),
+	}
+
+	row := us.DB.QueryRow(`
+		SELECT id, password_hash FROM users
+		WHERE email=$1;`, user.Email)
+
+	//Extract id and hashed password from db
+	err := row.Scan(&user.ID, &user.PasswordHash)
+	if err == sql.ErrNoRows {
+		return nil, fmt.Errorf("user not found: %w", err)
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(nu.Password))
+	if err != nil {
+		return nil, fmt.Errorf("wrong password: %w", err)
 	}
 	return &user, nil
 }

@@ -2,14 +2,12 @@ version: "3.9"
 
 #If you typed wrong password in adminer,
 #"docker compose down" and then "docker compose up"
-
 #! docker compose exec -it db psql -U root -d gallery
-#string value in postgres - first_name text;
+
 services:
-  #database
   #Name of the service
   db:
-    image: postgres
+    image: postgres:15-alpine
     restart: always
     #Env variables
     #these vars should be at start up to create user
@@ -20,13 +18,4 @@ services:
     ports:
     #port 3030 on pc maps to 5432 on docker vm
     #so in Conn string host=localhost port=3030... will connect to docker postgres
-      - "5432:5432"
-
-  #Adminer provides web UI to connect to db
-  adminer:
-    image: adminer
-    restart: always
-    environment:
-      ADMINER_DESIGN: dracula
-    ports:
-      - "3333:8080"
+      - "3030:5432"

@@ -14,7 +14,7 @@ func Open(cfg PostgresConfig) (*sql.DB, error) {
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS users (
 			id SERIAL PRIMARY KEY,
-			email TEXT NOT NULL,
+			email TEXT UNIQUE NOT NULL,
 			password_hash TEXT NOT NULL)
 		`)
 	if err != nil {
@@ -40,7 +40,7 @@ func (cfg PostgresConfig) String() string {
 func DefaultPostgresConfig() PostgresConfig {
 	return PostgresConfig{
 		Host:     "localhost",
-		Port:     "5432",
+		Port:     "3030",
 		User:     "root",
 		Password: "root",
 		Database: "gallery",
