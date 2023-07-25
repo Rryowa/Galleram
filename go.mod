@@ -1,4 +1,4 @@
-module galleryChi
+module galleram
 
 go 1.20
 

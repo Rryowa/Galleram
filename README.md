@@ -1,6 +1,6 @@
 ## Gallery fullstack web application
 
-<img src="https://github.com/Rryowa/Galleram/assets/80339180/cee48a81-a6df-44e8-b1ff-9728c44975cd"/>
+<img src="https://github.com/Rryowa/galleram/assets/80339180/cee48a81-a6df-44e8-b1ff-9728c44975cd"/>
 
 ## API based on: #
 * router: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chi

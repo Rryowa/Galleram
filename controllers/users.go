@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"galleryChi/models"
+	"galleram/models"
 	"net/http"
 )
 
@@ -14,6 +14,7 @@ type Users struct {
 	UserService *models.UserService
 }
 
+// SignUp - separated to dynamically focus on email or password in form
 func (u Users) SignUp(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email string
@@ -22,6 +23,7 @@ func (u Users) SignUp(w http.ResponseWriter, r *http.Request) {
 	u.UpTpl.Execute(w, data)
 }
 
+// SignIn - separated to dynamically focus on email or password in form
 func (u Users) SignIn(w http.ResponseWriter, r *http.Request) {
 	var data struct {
 		Email string
