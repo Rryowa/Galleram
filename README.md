@@ -1,5 +1,5 @@
 ## Gallery fullstack web application
-
+!(https://user-images.githubusercontent.com/80339180/255845821-e2d81e68-7740-49aa-aa47-aee7f9ceeb73.png)
 ## API based on: #
 * router: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chi
 * database: Postgres
